@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
-
 @Repository
 public class UserDaoImpl implements UserDao {
 
@@ -17,7 +16,6 @@ public class UserDaoImpl implements UserDao {
 
     @Autowired
     public UserDaoImpl(EntityManager entityManager) {
-
         this.entityManager = entityManager;
     }
 
@@ -31,31 +29,29 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void addUser(User user) {
-
         entityManager.persist(user);
     }
 
     @Override
     public User getUserById(Long id) {
-
         return entityManager.find(User.class, id);
     }
 
     @Override
     public void updateUser(User user) {
-
+        if (user.getPassword().isEmpty()) {
+            user.setPassword(entityManager.find(User.class, user.getId()).getPassword());
+        }
         entityManager.merge(user);
     }
 
     @Override
     public void removeUserById(Long id) {
-
         entityManager.remove(entityManager.find(User.class, id));
     }
 
     @Override
     public List<User> listUsers() {
-
         return entityManager.createQuery("From User", User.class).getResultList();
     }
 }

@@ -5,9 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
+
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -15,6 +18,7 @@ public class AdminController {
 
     private final UserService userService;
     private final RoleService roleService;
+    private final String emptyRole = "NOT_CHANGED";
 
     @Autowired
     public AdminController(UserService userService, RoleService roleService) {
@@ -59,7 +63,12 @@ public class AdminController {
     @PatchMapping("users/{id}/edit")
     public String update(@ModelAttribute("user") User user
             , @RequestParam(value = "roles") String[] roles) {
-        user.setRoles(roleService.getSetOfRoles(roles));
+        if (roles.length == 1 && roles[0].equals(emptyRole)) {
+            Set<Role> tmpRoles = userService.getUserById(user.getId()).getRoles();
+            user.setRoles(tmpRoles);
+        } else {
+            user.setRoles(roleService.getSetOfRoles(roles));
+        }
         userService.updateUser(user);
         return "redirect:/admin/users";
     }

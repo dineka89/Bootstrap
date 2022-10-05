@@ -18,7 +18,6 @@ public class UserController {
 
     @Autowired
     public void setUserService(UserService userService) {
-
         this.userService = userService;
     }
 

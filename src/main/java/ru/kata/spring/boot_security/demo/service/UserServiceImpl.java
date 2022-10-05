@@ -13,7 +13,7 @@ import ru.kata.spring.boot_security.demo.model.User;
 import java.util.List;
 
 @Service
-@Transactional
+//@Transactional убрать
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserDao userDao;
@@ -45,7 +45,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional(readOnly = false)
     public void updateUser(User user) {
-
         userDao.updateUser(user);
     }
 
