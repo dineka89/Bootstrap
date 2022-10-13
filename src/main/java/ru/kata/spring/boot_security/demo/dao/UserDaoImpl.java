@@ -38,11 +38,8 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void updateUser(User user) {
-        if (user.getPassword().isEmpty()) {
-            user.setPassword(entityManager.find(User.class, user.getId()).getPassword());
-        }
-        entityManager.merge(user);
+    public User updateUser(User user) {
+        return entityManager.merge(user);
     }
 
     @Override

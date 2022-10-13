@@ -24,7 +24,7 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public Role getRoleByName(String role) {
         return entityManager.createQuery(
-                "SELECT r from Role r where r.role=:role", Role.class
+                "SELECT r from Role r where r.name=:role", Role.class
         ).setParameter("role", role).getSingleResult();
     }
 
@@ -39,13 +39,11 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public void add(Role role) {
-
         entityManager.persist(role);
     }
 
     @Override
     public void edit(Role role) {
-
         entityManager.merge(role);
     }
 
