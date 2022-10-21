@@ -14,10 +14,10 @@ import ru.kata.spring.boot_security.demo.model.User;
 import java.util.List;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserDao userDao;
+
     @Autowired
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
@@ -29,7 +29,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
 
-
     @Transactional(readOnly = true)
     public User getUserByEmail(String email) {
 
@@ -37,9 +36,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public void addUser(User user) {
+        user.setPassword(passwordEncoder().encode(user.getPassword()));
         userDao.addUser(user);
-        passwordEncoder();
     }
 
     @Transactional(readOnly = true)
@@ -51,7 +51,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public void updateUser(User user) {
-
+        if (user.getRoles().size() == 0) {
+            user.setRoles(userDao.getUserById(user.getId()).getRoles());
+        }
+        user.setPassword(passwordEncoder().encode(user.getPassword()));
         userDao.updateUser(user);
     }
 

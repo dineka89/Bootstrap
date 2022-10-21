@@ -31,6 +31,9 @@ public class RoleDaoImpl implements RoleDao {
     @Override
     public Set<Role> getSetOfRoles(String[] roleNames) {
         Set<Role> roleSet = new HashSet<>();
+        if (roleNames == null || roleNames.length == 0) {
+            return roleSet;
+        }
         for (String role : roleNames) {
             roleSet.add(getRoleByName(role));
         }
